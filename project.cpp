@@ -9,20 +9,23 @@ bool trust[3][4]; // helper array for show table
 // update and show tha table
 void show()
 {
+    cout << "+-------+-------+-------+-------+\n";
     for (int i = 0; i < 3; i++)
     {
+        cout << "|";
         for (int j = 0; j < 4; j++)
         {
             if (trust[i][j] == true)
             {
-                cout << table[i][j] << " ";
+                cout << "   " << table[i][j] << "   " << "|";
             }
             else
             {
-                cout << "?" << " ";
+                cout << "   " << "?" << "   " << "|";
             }
         }
-        cout << endl;
+        cout << endl
+             << "+-------+-------+-------+-------+\n";
     }
 }
 
@@ -58,13 +61,16 @@ int main()
     cout << "START GAME!" << endl;
 
     // show the table for 5 second .....
+    cout << "+-------+-------+-------+-------+\n";
     for (int i = 0; i < 3; i++)
     {
+        cout << "|";
         for (int j = 0; j < 4; j++)
         {
-            cout << table[i][j] << " ";
+            cout << "   " << table[i][j] << "   " << "|";
         }
-        cout << endl;
+        cout << endl
+             << "+-------+-------+-------+-------+\n";
     }
     int timer = time(0); // start timer
     while (true)
@@ -144,4 +150,6 @@ int main()
     cout << "your score of selections : " << score << endl;
     cout << "your score of time is : " << timeScore << endl;
     cout << "your sum of scores is : " << score + timeScore;
+    int wait;
+    cin >> wait;
 }
