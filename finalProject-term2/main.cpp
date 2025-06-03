@@ -1,10 +1,12 @@
 #include <iostream>
 #include <fstream>
-#include <stdlib.h>
 #include "Location.h"
 #include "User.h"
 #include "Review.h"
 using namespace std;
+
+static Location locations[1000];
+static int locationId;
 
 void home()
 {
@@ -27,7 +29,6 @@ int main(int argc, const char **argv)
             while (true)
             {
                 system("clear");
-                static Location list[1000];
                 Location location;
                 ifstream loc("locations.bin", ios::binary);
                 int i = 0;
@@ -36,8 +37,8 @@ int main(int argc, const char **argv)
                 while (loc.read((char *)&location, sizeof(location)))
                 {
                     cout << i + 1 << ". ";
-                    list[i] = location;
-                    list[i].print();
+                    locations[i] = location;
+                    locations[i].print();
                     i++;
                 }
                 loc.close();
@@ -66,16 +67,17 @@ int main(int argc, const char **argv)
                 }
                 system("clear");
                 result--;
-                int listId = result;
-                int attractionCount = list[listId].get_count();
+                int locationId = result;
+                int attractionCount = locations[locationId].get_count();
                 while (true)
                 {
                     i = 0;
+                    // Show all attractions
                     cout << "\t\t\tAttraction Menu\n";
                     while (i < attractionCount)
                     {
                         cout << i + 1 << ". ";
-                        (list[listId].get_attraction(i)).print();
+                        (locations[locationId].get_attraction(i)).print();
                         i++;
                     }
                     cout << "\n0. \xF0\x9F\x94\x99 Back\n\n";
@@ -113,7 +115,7 @@ int main(int argc, const char **argv)
                         // Show all Reviews and fill an array of Reviews
                         while (rev.read((char *)&review, sizeof(review)))
                         {
-                            if (review.get_attraction() == list[reviewId].get_attraction(reviewId))
+                            if (review.get_attraction() == locations[locationId].get_attraction(reviewId))
                             {
                                 cout << i + 1 << ". ";
                                 reviewList[i] = review;
@@ -167,7 +169,7 @@ int main(int argc, const char **argv)
                             cout << "\xF0\x9F\x92\xAC Comment : ";
                             cin.ignore();
                             getline(cin, comment);
-                            
+
                             while (true)
                             {
                                 cout << "\xF0\x9F\x94\xB4 0. Cancel\t\xF0\x9F\x92\xBE 1. Save\n";

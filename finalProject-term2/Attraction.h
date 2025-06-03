@@ -15,10 +15,10 @@ public:
         strncpy(this->name, name, sizeof(this->name));
         this->name[sizeof(this->name) - 1] = '\0';
 
-        strncpy(this->type, name, sizeof(this->type));
+        strncpy(this->type, type, sizeof(this->type));
         this->type[sizeof(this->type) - 1] = '\0';
 
-        strncpy(this->description, name, sizeof(this->description));
+        strncpy(this->description, description, sizeof(this->description));
         this->description[sizeof(this->description) - 1] = '\0';
     }
 
@@ -30,13 +30,13 @@ public:
 
     void set_type(const char *type)
     {
-        strncpy(this->type, name, sizeof(this->type));
+        strncpy(this->type, type, sizeof(this->type));
         this->type[sizeof(this->type) - 1] = '\0';
     }
 
     void set_description(const char *description)
     {
-        strncpy(this->description, name, sizeof(this->description));
+        strncpy(this->description, description, sizeof(this->description));
         this->description[sizeof(this->description) - 1] = '\0';
     }
 
@@ -50,7 +50,7 @@ public:
         return this->type;
     }
 
-    std::string get_description()
+    std::string get_description() const
     {
         return this->description;
     }
@@ -60,9 +60,9 @@ public:
         std::cout << "\n \xF0\x9F\x94\xB5 Name : " << this->name << "\n \xF0\x9F\x94\xB0 Type : " << this->type << "\n \xF0\x9F\x93\x9D Description : " << this->description << std::endl;
         std::cout << "----------------------------------------------------------------------------" << std::endl;
     }
-    bool operator==(Attraction x) const
+    bool operator==(const Attraction &x) const
     {
-        return x.get_name() == get_name();
+        return std::string(this->name) == x.get_name();
     }
 };
 #endif
