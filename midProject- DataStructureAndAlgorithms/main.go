@@ -71,6 +71,7 @@ func (stack Stack) show() (x, y int, ok bool) {
 	return
 }
 
+// Find location start point of the maze 
 func findStartPoint(list [][]int, start int) (x, y int) {
 	for i := 0; i < len(list); i++ {
 		if list[i][0] == start {
@@ -95,11 +96,11 @@ var maze = [][]int{
 }
 
 func run(pr, pc int, stack *Stack, end int) bool {
-	if maze[pr][pc] == 3 {
+	if maze[pr][pc] == 3 { // if for the end of the function
 		return true
 	}
 
-	maze[pr][pc] = 5
+	maze[pr][pc] = 5 // flagging the way traveled
 
 	if pr+1 < len(maze) && (maze[pr+1][pc] == 1 || maze[pr+1][pc] == end) { // Turn down
 		stack.push(pr+1, pc)
@@ -134,13 +135,14 @@ func run(pr, pc int, stack *Stack, end int) bool {
 
 func main() {
 	sr, sc := findStartPoint(maze, 2) // Start row and Start column
-	stack := newStack()
+	stack := newStack() // make stack with constructor
 
 	pr, pc := sr, sc // Pointer row and Pointer column
 	pc++
 	stack.push(pr, pc)
+	
+	// Copy maze into another slice => copyMaze
 	copyMaze := make([][]int, len(maze))
-
 	for i := range maze {
 		copyMaze[i] = make([]int, len(maze[i]))
 		copy(copyMaze[i], maze[i])
@@ -156,8 +158,8 @@ func main() {
 			if !o {
 				break
 			}
-			fmt.Printf("(%d,%d) - ", x, y)
-			copyMaze[x][y] = 5
+			fmt.Printf("(%d,%d) - ", x, y) // print location of true way
+			copyMaze[x][y] = 5 // flagging true way
 		}
 		fmt.Print("\n")
 		for i := 0; i < len(copyMaze); i++ {
@@ -170,6 +172,8 @@ func main() {
 			}
 			fmt.Print("\n")
 		}
+	}else {
+		fmt.Println("Way not Founded!")
 	}
 
 }
