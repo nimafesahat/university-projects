@@ -42,8 +42,8 @@ func (stack *Stack) pop() (x, y int, ok bool) {
 		ok = true
 	} else {
 		ok = false
-		x = 0
-		y = 0
+		x = -1
+		y = -1
 	}
 	return
 }
@@ -65,8 +65,8 @@ func (stack Stack) show() (x, y int, ok bool) {
 		ok = true
 	} else {
 		ok = false
-		x = 0
-		y = 0
+		x = -1
+		y = -1
 	}
 	return
 }
@@ -84,19 +84,19 @@ func findStartPoint(list [][]int, start int) (x, y int) {
 }
 
 var maze = [][]int{
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{2, 1, 1, 0, 1, 1, 1, 1, 1, 0},
-	{0, 1, 0, 0, 1, 0, 0, 0, 1, 0},
-	{0, 1, 1, 1, 1, 0, 1, 1, 1, 0},
-	{0, 0, 0, 0, 1, 0, 1, 1, 1, 0},
-	{0, 1, 1, 1, 1, 1, 1, 0, 1, 3},
-	{0, 1, 0, 0, 0, 0, 0, 0, 1, 0},
-	{0, 1, 1, 1, 1, 1, 0, 1, 1, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, // 0
+	{2, 1, 1, 0, 1, 1, 1, 1, 1, 0},	// 1
+	{0, 1, 0, 0, 1, 0, 0, 0, 1, 0},	// 2	
+	{0, 1, 1, 1, 1, 0, 1, 0, 1, 0},	// 3
+	{0, 0, 0, 0, 1, 0, 1, 1, 1, 0},	// 4
+	{0, 1, 1, 1, 1, 1, 1, 0, 1, 3}, // 5
+	{0, 1, 0, 0, 0, 0, 0, 0, 1, 0},	// 6
+	{0, 1, 1, 1, 1, 1, 0, 1, 1, 0},	// 7
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},	// 8
 }
 
 func run(pr, pc int, stack *Stack, end int) bool {
-	if maze[pr][pc] == 3 { // if for the end of the function
+	if maze[pr][pc] == end { // if for the end of the function
 		return true
 	}
 
@@ -138,7 +138,6 @@ func main() {
 	stack := newStack() // make stack with constructor
 
 	pr, pc := sr, sc // Pointer row and Pointer column
-	pc++
 	stack.push(pr, pc)
 	
 	// Copy maze into another slice => copyMaze
