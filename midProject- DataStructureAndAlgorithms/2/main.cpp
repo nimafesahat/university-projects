@@ -46,7 +46,7 @@ public:
         return 0;
     }
 
-    struct Page *insert(int d)
+    void insert(int d)
     {
         Page *n = new Page(d);
         if (IsEmpty())
@@ -62,7 +62,20 @@ public:
             }
             cur->next = n;
         }
-        return n;
+    }
+
+    struct Page *find(int d)
+    {
+        Page *cur = start;
+        while (cur)
+        {
+            if (cur->data == d)
+            {
+                return cur;
+            }
+            cur = cur->next;
+        }
+        return 0;
     }
 };
 
@@ -102,65 +115,6 @@ public:
             cur->next = n;
         }
         return n;
-    }
-
-    void update(vector<string> d)
-    {
-        if (IsEmpty())
-        {
-            cout << "List is Empty!";
-            return;
-        }
-        else
-        {
-            Word *cur = start;
-            int i = 0;
-            while (cur)
-            {
-                cur->data = d[i++];
-                cur = cur->next;
-            }
-        }
-    }
-
-    struct Word *find(int d)
-    {
-        int i = 1;
-        Word *cur = start;
-        while (cur)
-        {
-            if (i == d)
-            {
-                return cur;
-                break;
-            }
-            cur = cur->next;
-            i++;
-        }
-        return 0;
-    }
-
-    void show()
-    {
-        if (IsEmpty())
-        {
-            cout << "List is Empty!";
-            return;
-        }
-        else
-        {
-            Word *cur = start;
-            while (cur)
-            {
-                cout << cur->data << " ";
-                cur = cur->next;
-            }
-        }
-    }
-
-    struct Word *getStart()
-    {
-        return start;
     }
 };
 
@@ -216,16 +170,16 @@ int main()
     if (!file.is_open())
     {
         cout << "Error : File wasn't open!\n";
+        return 1;
     }
 
     string line;
-    vector<string> words;
+    vector<pair<string, int>> words;
     int countline = 0;
     int countpage = 1;
 
-    WordList wordList;
     PageList pageList;
-    Page *page = pageList.insert(countpage);
+    pageList.insert(countpage);
 
     while (getline(file, line))
     {
@@ -233,16 +187,15 @@ int main()
         string w;
         while (ss >> w)
         {
-            words.push_back(w);
-            wordList.insert(w, page);
+            words.push_back({w, countpage});
         }
 
         countline++;
         if (countline == 40)
         {
-            page = pageList.insert(countpage);
-            countline = 0;
             countpage++;
+            pageList.insert(countpage);
+            countline = 0;
             continue;
         }
     }
@@ -250,30 +203,57 @@ int main()
 
     // Sort words alphabetically
     sort(words.begin(), words.end());
-    wordList.update(words);
 
-    char c = 'a';
-    Word *wrd = wordList.find(1);
+    WordList wordList;
+    char c = '\0';
     LetterList letterList;
-    letterList.insert(c, wrd);
-
-    int j = 1;
-    for (string w : words)
+    Page *page;
+    for (auto &w : words)
     {
-        if (w[0] != c)
+        page = pageList.find(w.second);
+        Word *wrd = wordList.insert(w.first, page);
+        if (c != '\0' && c != w.first[0])
         {
-            c = w[0];
-            wrd = wordList.find(j);
+            c = w.first[0];
             letterList.insert(c, wrd);
         }
-        j++;
+        else if (c == '\0')
+        {
+            c = w.first[0];
+            letterList.insert(c, wrd);
+        }
     }
 
     Letter *startLetter = letterList.getStart();
+    ofstream out("out.txt");
+
+    if (!out.is_open())
+    {
+        cout << "Error : File wasn't created!\n";
+        return 1;
+    }
+    else
+    {
+        cout << "\nFile created successfully.\n";
+    }
+
     while (startLetter)
     {
-        cout << startLetter->data << " : " << startLetter->firstword->data << " : " << startLetter->firstword->page->data;
-        cout << "\n";
+        Word *startWord = startLetter->firstword;
+        int i = 0;
+        while (startWord)
+        {
+            out << "Char : " << startLetter->data << " Word : " << startWord->data << " Page : " << startWord->page->data << "  |  ";
+            startWord = startWord->next;
+            i++;
+            if (i == 15)
+            {
+                i = 0;
+                out << "\n";
+            }
+        }
         startLetter = startLetter->next;
     }
+    out.close();
+    cout << "\nFile is ok; The number of words :" << words.size() << "; Name : out.txt\n";
 }
